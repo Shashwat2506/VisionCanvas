@@ -1,0 +1,30 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+.env
+.venv/
+ENV/
+
+# IDE and Editor files
+.vscode/
+.idea/
+.gemini/
+*.swp
+*.swo
+
+# Output drawings/captures (keep the directory structure via .gitkeep)
+output/*.png
+output/*.jpg
+output/*.jpeg
+!output/.gitkeep
+
+# Operating system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
