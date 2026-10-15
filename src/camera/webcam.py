@@ -11,31 +11,53 @@ class Webcam:
     buffered frame.
     """
 
-    def __init__(self, camera_index: int = CAMERA_INDEX):
+    def __init__(self, camera_index: int = CAMERA_INDEX, fallback_on_error: bool = True):
+        self.camera_index = camera_index
+        self.is_connected = False
+        self._lock = threading.Lock()
+        self._latest_frame = None
+        self._running = False
+        self._thread = None
+
         self.cap = cv2.VideoCapture(camera_index)
         if not self.cap.isOpened():
-            raise RuntimeError("Could not open webcam.")
+            if not fallback_on_error:
+                raise RuntimeError(f"Could not open webcam at index {camera_index}.")
+            self.is_connected = False
+            self._latest_frame = self._generate_offline_frame()
+            return
 
+        self.is_connected = True
         # Set resolution
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
-
-        # Minimize internal buffer to avoid processing stale frames
         self.cap.set(cv2.CAP_PROP_BUFFERSIZE, CAMERA_BUFFER_SIZE)
 
-        # Threaded capture state
-        self._lock = threading.Lock()
-        self._latest_frame = None
         self._running = True
 
         # Read first frame synchronously so we have something immediately
         success, frame = self.cap.read()
         if success:
             self._latest_frame = frame
+        else:
+            self._latest_frame = self._generate_offline_frame()
 
         # Start background capture thread
         self._thread = threading.Thread(target=self._capture_loop, daemon=True)
         self._thread.start()
+
+    def _generate_offline_frame(self):
+        """Generate a clean placeholder frame when camera is unavailable."""
+        import numpy as np
+        frame = np.full((CAMERA_HEIGHT, CAMERA_WIDTH, 3), (20, 22, 32), dtype=np.uint8)
+        # Draw placeholder text and icon
+        cv2.putText(frame, "CAMERA UNAVAILABLE", (CAMERA_WIDTH // 2 - 140, CAMERA_HEIGHT // 2 - 10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (120, 125, 150), 2, cv2.LINE_AA)
+        cv2.putText(frame, "Please check webcam connection / permissions",
+                    (CAMERA_WIDTH // 2 - 180, CAMERA_HEIGHT // 2 + 25),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.45, (80, 85, 110), 1, cv2.LINE_AA)
+        return frame
+
 
     def _capture_loop(self):
         """Continuously grab the latest frame from the camera."""
@@ -58,6 +80,7 @@ class Webcam:
 
     def release(self):
         self._running = False
-        if self._thread.is_alive():
+        if self._thread is not None and self._thread.is_alive():
             self._thread.join(timeout=2.0)
-        self.cap.release()
+        if hasattr(self, 'cap') and self.cap is not None:
+            self.cap.release()

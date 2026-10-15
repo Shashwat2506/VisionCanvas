@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionCanvas — Black-Box Automated Test Report</title>
+    <style>
+        :root {
+            --bg: #0d0f18;
+            --panel: #151824;
+            --border: #282c3f;
+            --accent: #8b5cf6;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-dim: #64748b;
+            --green: #10b981;
+            --red: #ef4444;
+            --amber: #f59e0b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg); color: var(--text-primary); padding: 32px 20px; line-height: 1.5; }
+        .container { max-width: 1300px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        .title h1 { font-size: 26px; font-weight: 700; color: #fff; }
+        .title p { color: var(--text-secondary); font-size: 14px; margin-top: 4px; }
+        .timestamp { font-size: 13px; color: var(--text-dim); text-align: right; }
+
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 30px; }
+        .kpi-card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
+        .kpi-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); }
+        .kpi-value { font-size: 28px; font-weight: 800; margin-top: 6px; }
+        .kpi-pass { color: var(--green); }
+        .kpi-fail { color: var(--red); }
+        .kpi-rate { color: var(--accent); }
+
+        .table-wrap { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; overflow-x: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+        th { background: #1c2030; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.05em; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+        td { padding: 14px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+        tr:hover td { background: rgba(139, 92, 246, 0.03); }
+        .tc-id { font-weight: 700; color: var(--accent); white-space: nowrap; }
+        .tc-dur { font-family: monospace; color: var(--text-secondary); }
+        .text-dim { color: var(--text-dim); }
+        code { background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; font-size: 12px; font-family: Consolas, monospace; color: #38bdf8; }
+
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; }
+        .badge-pass { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-fail { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .badge-blocked { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+
+        .footer { margin-top: 32px; font-size: 12px; color: var(--text-dim); text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">
+                <h1>VisionCanvas — Automated Black-Box Test Report</h1>
+                <p>Software Engineering & Modelling Assignment • Automated Test Execution Suite</p>
+            </div>
+            <div class="timestamp">
+                Execution Engine: pytest & Python Test Runner<br>
+                Target: VisionCanvas v2.0 (OpenCV / MediaPipe Studio)
+            </div>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">Total Test Cases</div>
+                <div class="kpi-value">16</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Tests Passed</div>
+                <div class="kpi-value kpi-pass">16</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Tests Failed</div>
+                <div class="kpi-value kpi-fail">0</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Pass Rate</div>
+                <div class="kpi-value kpi-rate">100.0%</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Execution Time</div>
+                <div class="kpi-value">2.390s</div>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Test Case & Objective</th>
+                        <th>Input / Action</th>
+                        <th>Expected Result</th>
+                        <th>Actual Result</th>
+                        <th>Status</th>
+                        <th>Duration</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+        <tr>
+            <td class="tc-id">BB01</td>
+            <td class="tc-name"><strong>Application Launch</strong><br><small class="text-dim">Verify that VisionCanvas core subsystems start without unhandled exceptions.</small></td>
+            <td><code>Initialize ModernUI and DrawingCanvas components.</code></td>
+            <td>VisionCanvas initializes with expected 1280x720 window and 640x480 canvas.</td>
+            <td>Subsystems initialized successfully. Window=1280x720, Canvas=640x480.</td>
+            <td><span class="badge badge-pass">PASS</span></td>
+            <td class="tc-dur">65.8ms</td>
+            <td><small>Clean initialization with zero unhandled exceptions.</small></td>
+        </tr>
+        
+        <tr>
+            <td class="tc-id">BB02</td>
+            <td class="tc-name"><strong>Camera Initialization</strong><br><small class="text-dim">Verify camera abstraction acquires video frame when camera is accessible.</small></td>
+            <td><code>Initialize Webcam() capture and invoke get_frame().</code></td>
+            <td>A valid 3-channel 640x480 frame buffer is returned.</td>
+            <td>Frame acquired successfully. Shape=(480, 640, 3), Live Camera Connected=True.</td>
+            <td><span class="badge badge-pass">PASS</span></td>
+            <td class="tc-dur">1764.2ms</td>
+            <td><small>Camera buffer successfully delivered to render pipeline.</small></td>
+        </tr>
+        
+        <tr>
+            <td class="tc-id">BB03</td>
+            <td class="tc-name"><strong>Camera Unavailable Handling</strong><br><small class="text-dim">Verify graceful error handling and fallback when camera device is unavailable.</small></td>
+            <td><code>Instantiate Webcam(camera_index=9999, fallback_on_error=True).</code></td>
+            <td>Application does not crash; generates diagnostic offline frame and handles error.</td>
+            <td>Graceful fallback: is_connected=False, generated offline diagnostic placeholder frame without crashing.</td>
+            <td><span class="badge badge-pass">PASS</span></td>
+            <td class="tc-dur">59.5ms</td>
+            <td><small>System prevented fatal crash on camera failure.</small></td>
+        </tr>
+        
+        <tr>
+            <td class="tc-id">BB04</td>
+            <td class="tc-name"><strong>Brush Preset Selection</strong><br><small class="text-dim">Verify selecting a brush preset updates active brush and stroke styling.</small></td>
+            <td><code>Invoke ui.set_active_brush(2) (Neon Brush preset).</code></td>
+            <td>Active brush changes from 0 to 2; preset tiles update visually.</td>
+            <td>Active brush transitioned from preset 0 (Hard) to 2 (Neon).</td>
+            <td><span class="badge badge-pass">PASS</span></td>
+            <td class="tc-dur">109.6ms</td>
+            <td><small>Preset selection confirmed via UI state and tile highlight.</small></td>
+        </tr>
+        
+        <tr>
+            <td class="tc-id">BB05</td>
+            <td class="tc-name"><strong>Brush Size Adjustment</strong><br><small class="text-dim">Verify changing brush size adjusts the thickness of rendered strokes.</small></td>
+            <td><code>Render identical 100px line segment with thickness=2 vs thickness=14.</code></td>
+            <td>Thick stroke renders significantly greater pixel footprint than fine stroke.</td>
+            <td>Fine stroke pixels: 1030, Thick stroke pixels: 3834 (Ratio: 3.7x).</td>
+            <td><span class="badge badge-pass">PASS</span></td>
+            <td class="tc-dur">5.3ms</td>
+            <td><small>Stroke thickness scales proportionally with brush size setting.</small></td>
+        </tr>
+        
+        <tr>
+            <td class="tc-id">BB06</td>
+            <td class="tc-name"><strong>Color Selection</strong><br><small class="text-dim">Verify selecting a color swatch updates active drawing color.</small></td>
+            <td><code>Select Red swatch (index 2: BGR (50, 50, 245)).</code></td>
+            <td>Active color updates to (50, 50, 245) and canvas strokes render in Red.</td>
+            <td>Selected 'Red'. Canvas pixel at (100, 50) verified as BGR (50, 50, 245).</td>
+            <td><span class="badge badge-pass">PASS</span></td>
+            <td class="tc-dur">101.4ms</td>
+            <td><small>Palette selection accurately propagates to drawing raster.</small></td>
+        </tr>
+        
+        <tr>
+            <td class="tc-id">BB07</td>
+            <td class="tc-name"><strong>Eraser Functionality</strong><br><small class="text-dim">Verify eraser removes existing drawing content from canvas.</small></td>
+            <td><code>Switch brush to black eraser and re-draw over existing stroke.</code></td>
+            <td>Drawn pixels count decreases after erasing.</td>
+            <td>Initial drawn pixels: 2871, after erase: 0 (erased 2871 px).</td>
+            <td><span class="badge badge-pass">PASS</span></td>
+            <td class="tc-dur">2.9ms</td>
+            <td><small>Eraser cleared painted raster content as expected.</small></td>
+        </tr>
+        
+        <tr>
+            <td class="tc-id">BB08</td>
+            <td class="tc-name"><strong>Smart Shapes (Beautification Enabled)</strong><br><small class="text-dim">Verify freehand straight-line stroke is beautified when Smart Shapes is ON.</small></td>
+            <td><code>Submit 30-point stroke with +-2px sinusoidal hand tremor.</code></td>
+            <td>Stroke recognized and beautified to clean 'Straight Line'.</td>
+            <td>Shape recognized as 'Straight Line'. Beautified line rendered cleanly on canvas.</td>
+            <td><span class="badge badge-pass">PASS</span></td>
+            <td class="tc-dur">1.0ms</td>
+            <td><small>Geometric analyzer detected straight line within chord threshold.</small></td>
+        </tr>
+        
+        <tr>
+            <td class="tc-id">BB09</td>
+            <td class="tc-name"><strong>Smart Shapes (Beautification Disabled)</strong><br><small class="text-dim">Verify freehand stroke remains unmodified when Smart Shapes is OFF.</small></td>
+            <td><code>Draw raw stroke with Smart Shapes disabled.</code></td>
+            <td>Raw stroke points retained; no shape replacement performed.</td>
+            <td>Raw stroke retained all 25 points without replacement.</td>
+            <td><span class="badge badge-pass">PASS</span></td>
+            <td class="tc-dur">54.3ms</td>
+            <td><small>Freehand drawing preserved when AI shape mode is toggled off.</small></td>
+        </tr>
+        
+        <tr>
+            <td class="tc-id">BB10</td>
+            <td class="tc-name"><strong>Undo Operation</strong><br><small class="text-dim">Verify undo reverses the last drawing stroke from canvas.</small></td>
+            <td><code>Invoke canvas.undo().</code></td>
+            <td>Canvas pixels revert to pre-stroke state (empty canvas).</td>
+            <td>Canvas state reverted from drawn content back to clean 0-pixel buffer.</td>
+            <td><span class="badge badge-pass">PASS</span></td>
+            <td class="tc-dur">2.2ms</td>
+            <td><small>Undo stack popped and restored previous canvas copy.</small></td>
+        </tr>
+        
+        <tr>
+            <td class="tc-id">BB11</td>
+            <td class="tc-name"><strong>Redo Operation</strong><br><small class="text-dim">Verify redo restores the previously undone drawing stroke.</small></td>
+            <td><code>Invoke canvas.redo().</code></td>
+            <td>Canvas pixels restored to the state prior to undo.</td>
+            <td>Redo restored exact pixel footprint (516 pixels).</td>
+            <td><span class="badge badge-pass">PASS</span></td>
+            <td class="tc-dur">1.0ms</td>
+            <td><small>Redo stack popped and pushed state back to undo history.</small></td>
+        </tr>
+        
+        <tr>
+            <td class="tc-id">BB12</td>
+            <td class="tc-name"><strong>Clear Canvas</strong><br><small class="text-dim">Verify clear removes all content and records clear action in history.</small></td>
+            <td><code>Invoke canvas.clear().</code></td>
+            <td>Canvas is completely wiped to black (0 pixels); undo can reverse it.</td>
+            <td>Canvas cleared to 0 pixels; subsequent undo successfully restored drawing.</td>
+            <td><span class="badge badge-pass">PASS</span></td>
+            <td class="tc-dur">4.3ms</td>
+            <td><small>Clear action is safe, non-destructive, and undoable.</small></td>
+        </tr>
+        
+        <tr>
+            <td class="tc-id">BB13</td>
+            <td class="tc-name"><strong>Save & Export</strong><br><small class="text-dim">Verify saving canvas produces a valid, readable PNG file in output directory.</small></td>
+            <td><code>Save drawing snapshot to output/test_run_snapshot.png.</code></td>
+            <td>PNG file created on disk with valid dimensions and non-zero file size.</td>
+            <td>File saved: 'output\test_bb13_snapshot.png' (3731 bytes, shape (480, 640, 3)).</td>
+            <td><span class="badge badge-pass">PASS</span></td>
+            <td class="tc-dur">12.8ms</td>
+            <td><small>Exported PNG validated with OpenCV image decoder.</small></td>
+        </tr>
+        
+        <tr>
+            <td class="tc-id">BB14</td>
+            <td class="tc-name"><strong>Focus Mode Workspace Transition</strong><br><small class="text-dim">Verify Focus Mode collapses side panels to maximize canvas area and exits cleanly.</small></td>
+            <td><code>Toggle Focus Mode ON, inspect layout, then toggle Focus Mode OFF.</code></td>
+            <td>Left/Right widths collapse to 0, workspace expands, then restores upon exit.</td>
+            <td>Focus Mode expanded canvas height from 610px to 632px; exited cleanly.</td>
+            <td><span class="badge badge-pass">PASS</span></td>
+            <td class="tc-dur">128.7ms</td>
+            <td><small>Dynamic layout recomputed and restored sidebars seamlessly.</small></td>
+        </tr>
+        
+        <tr>
+            <td class="tc-id">BB15</td>
+            <td class="tc-name"><strong>Handwriting Recognition</strong><br><small class="text-dim">Verify air-drawn character stroke is recognized by offline Text AI engine.</small></td>
+            <td><code>Submit 28-point circular stroke representing character 'O'.</code></td>
+            <td>TextRecognizer predicts 'O' with confidence >= 0.70.</td>
+            <td>Character recognized as 'O' with confidence 99.0%. Bounding box: (110, 100, 80, 99).</td>
+            <td><span class="badge badge-pass">PASS</span></td>
+            <td class="tc-dur">12.6ms</td>
+            <td><small>Topological loop analysis and normalized template matching matched glyph accurately.</small></td>
+        </tr>
+        
+        <tr>
+            <td class="tc-id">BB16</td>
+            <td class="tc-name"><strong>Boundary & Invalid Input Safety</strong><br><small class="text-dim">Verify system handles empty, None, and out-of-bounds inputs without crashing.</small></td>
+            <td><code>Submit draw(None), empty shape points [], empty text strokes [], and out-of-bounds clicks.</code></td>
+            <td>All methods handle invalid parameters safely with zero unhandled exceptions.</td>
+            <td>All 5 invalid/boundary inputs rejected safely with graceful return values.</td>
+            <td><span class="badge badge-pass">PASS</span></td>
+            <td class="tc-dur">64.3ms</td>
+            <td><small>Zero crashes or uncaught exceptions across all boundary test cases.</small></td>
+        </tr>
+        
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            Generated automatically by <code>run_black_box_tests.py</code> • VisionCanvas Project
+        </div>
+    </div>
+</body>
+</html>

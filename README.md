@@ -7,16 +7,16 @@ VisionCanvas is a real-time, gesture-controlled air-canvas application powered b
 ## ✨ Features
 
 - **Real-Time Hand Tracking:** Powered by MediaPipe's Hand Landmarker model for fast, accurate tracking.
+- **AI Handwriting-to-Text Conversion (Text AI):**
+  - Air-draw letters (A–Z) and numbers (0–9) or words in the air with index finger.
+  - Automatically recognizes handwriting and presents an interactive review card with Accept, Retry, and Dismiss options.
+  - Converts rough air-drawn strokes into clean, TrueType typeset glyphs (Arial, Calibri, Times New Roman, Segoe UI) preserving color, scaling, and position.
+  - Full collapsible undo/redo support.
+- **Smart Shape Beautification:** Real-time geometric circle, rectangle, line, and triangle recognition and auto-snapping.
 - **Multiple Brush Presets:**
-  - Hard Brush
-  - Soft Brush
-  - Neon Brush
-  - Pencil Brush
-  - Watercolor Brush
-- **Smooth Stroke Interpolation:** Integrated **One Euro Filter** reduces jitter while maintaining low-latency responsiveness.
-- **Intuitive Gestures & Shortcuts:**
-  - Index finger pointing to draw / interact.
-  - Quick keyboard hotkeys for canvas controls, brush switching, and canvas snapshots.
+  - Hard Brush, Soft Brush, Neon Glow Brush, Pencil Brush, Watercolor Brush.
+- **Smooth Stroke Interpolation:** Integrated **One Euro Filter** eliminates jitter while maintaining low latency.
+- **Interactive Studio UI & Focus Mode:** Glassmorphism UI panel, color wheel swatches, brush size sliders, and borderless canvas Focus Mode.
 - **Save & Export:** Save drawings directly to the `output/` directory in PNG format.
 
 ---
@@ -58,10 +58,10 @@ VisionCanvas is a real-time, gesture-controlled air-canvas application powered b
 
 Run the main application script:
 
-```bash
-python main.py
+```powershell
+.\venv\Scripts\python.exe main.py
 ```
-*(Or directly with your venv on Windows: `.\venv\Scripts\python.exe main.py`)*
+*(Or `python main.py` with activated venv)*
 
 ---
 
@@ -69,15 +69,37 @@ python main.py
 
 | Key | Action |
 | :--- | :--- |
-| `b` | Switch to Brush mode |
-| `e` | Switch to Eraser mode |
+| `t` | Switch to **Text AI Mode** (Handwriting-to-Typeset conversion) |
+| `b` | Switch to **Brush Mode** (or toggle Bold in Text mode) |
+| `i` | Toggle Italic in Text mode |
+| `e` | Switch to **Eraser Mode** |
+| `s` | Toggle **Smart Shapes** (Auto-beautification) |
+| `f` | Toggle **Focus Mode** (Canvas maximized, collapsed sidebars) |
+| `Enter` | Accept recognized text / trigger text recognition |
+| `Space` | Manually trigger recognition on drawn strokes |
+| `r` | Retry recognized text (or Redo in normal mode) |
 | `1` - `5` | Switch brush preset (Hard, Soft, Neon, Pencil, Watercolor) |
 | `[` / `]` | Decrease / Increase brush thickness |
 | `c` | Clear canvas |
 | `z` | Undo stroke |
 | `y` | Redo stroke |
-| `s` | Save canvas snapshot to `output/` |
-| `q` / `Esc` | Quit application |
+| `x` | Save/export snapshot to `output/` |
+| `q` / `Esc` | Dismiss text review / Quit application |
+
+---
+
+## 🧪 Automated Testing
+
+VisionCanvas includes a full automated test suite with 45+ unit tests and 16 black-box GUI automation scenarios:
+
+```powershell
+# Run unit tests
+.\venv\Scripts\pytest -v
+
+# Run black-box integration tests and generate HTML report
+.\venv\Scripts\python run_black_box_tests.py
+```
+Test report output: [`reports/black_box_test_report.html`](reports/black_box_test_report.html)
 
 ---
 
@@ -85,19 +107,21 @@ python main.py
 
 ```
 VisionCanvas/
-├── assets/                  # Project assets
-├── docs/                    # Documentation
-├── output/                  # Saved drawings (PNG)
+├── assets/                  # UI assets and snapshots
+├── output/                  # Exported canvas drawings (PNG)
+├── reports/                 # Black-box test reports (HTML)
 ├── src/
 │   ├── brushes/             # Brush implementations (Hard, Soft, Neon, etc.)
-│   ├── camera/              # Webcam capture abstraction
-│   ├── canvas/              # Drawing canvas logic and stroke rendering
+│   ├── camera/              # Webcam capture abstraction with mock fallback
+│   ├── canvas/              # Drawing canvas, FontManager, Shape & Text recognizers
 │   ├── gestures/            # Gesture recognition and virtual cursor
 │   ├── hand_tracking/       # MediaPipe HandLandmarker wrapper & task file
-│   ├── ui/                  # UI components and layout
-│   ├── utils/               # Smoothing filter (One Euro Filter)
+│   ├── ui/                  # Studio UI components and layout
+│   ├── utils/               # One Euro Filter smoothing
 │   └── config.py            # Global project configuration
+├── tests/                   # Pytest suite (Unit & Black-Box GUI tests)
 ├── main.py                  # Application entry point
+├── run_black_box_tests.py   # Black-box test runner & report generator
 ├── requirements.txt         # Project dependencies
 └── README.md
 ```

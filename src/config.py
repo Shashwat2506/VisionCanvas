@@ -15,22 +15,27 @@ TRACKING_CONFIDENCE = 0.7
 MODEL_PATH = "src/hand_tracking/hand_landmarker.task"
 
 # --- One Euro Filter (Smoothing) ---
-# mincutoff: lower = smoother but laggier. 1.0-10.0 good for hand tracking
-# beta: higher = more responsive to fast movement. 0.01-0.5 typical
-# dcutoff: derivative cutoff, usually left at 1.0
+# mincutoff: lower = smoother at low speed. 0.8-1.5 eliminates jitter
+# beta: higher = more responsive to fast movement. 0.03-0.08 is optimal
 SMOOTHING_ENABLED = True
-ONE_EURO_MIN_CUTOFF = 10.0
-ONE_EURO_BETA = 0.05
+ONE_EURO_MIN_CUTOFF = 1.0
+ONE_EURO_BETA = 0.06
 ONE_EURO_DCUTOFF = 1.0
 
 # --- Drawing ---
-MAX_INTERPOLATION_DISTANCE = 5.0
-MAX_CURSOR_JUMP = 150  # Ignore jumps larger than this (pixel distance)
-BRUSH_DEFAULT_SIZE = 12
+MAX_INTERPOLATION_DISTANCE = 4.0
+MAX_CURSOR_JUMP = 200  # Pixel distance for glitch rejection
+BRUSH_DEFAULT_SIZE = 4  # Fine, natural starting brush size (4px)
+BRUSH_SIZES = [2, 4, 8, 14, 22]  # Fine, Normal, Medium, Thick, Marker
 BRUSH_DEFAULT_COLOR = (180, 80, 255)  # BGR purple
 
+# --- AI & Recognition ---
+SMART_SHAPES_DEFAULT = True
+SHAPE_CONFIDENCE_THRESHOLD = 0.75
+TEXT_RECOGNITION_ENABLED = True
+
 # --- Canvas ---
-CANVAS_WIDTH = 640   # Matched to camera for 1:1 mapping
+CANVAS_WIDTH = 640   # Base camera resolution
 CANVAS_HEIGHT = 480
 
 # --- UI Window ---
@@ -38,7 +43,7 @@ WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
 # --- Gesture Debounce ---
-GESTURE_DEBOUNCE_TIME = 0.5  # seconds for undo/redo/save
+GESTURE_DEBOUNCE_TIME = 0.4  # seconds for undo/redo/save
 
 # --- Performance / Debug ---
 DEBUG_PERFORMANCE = False
@@ -48,5 +53,6 @@ TARGET_FPS = 30
 DRAW_HAND_LANDMARKS = True
 LANDMARK_COLOR = (255, 120, 255)      # BGR neon pink
 LANDMARK_CONNECTION_COLOR = (180, 80, 255)  # BGR purple
-LANDMARK_DOT_RADIUS = 4
-LANDMARK_LINE_THICKNESS = 2
+LANDMARK_DOT_RADIUS = 3
+LANDMARK_LINE_THICKNESS = 1
+
